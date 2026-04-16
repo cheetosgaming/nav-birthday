@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Valentine Ultra Premium</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{--pink:#ff4d6d;--pink2:#ff8aa1;--bg1:#fff0f5;--bg2:#ffe4ec;--text:#7a1f3d}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Inter',sans-serif;background:linear-gradient(to bottom,var(--bg1),var(--bg2));text-align:center}
+.container{max-width:1100px;margin:auto;padding:32px 20px}
+h1{font-family:'Playfair Display',serif;color:var(--text)}
+
+.carousel{overflow:hidden;margin-bottom:20px}
+.track{display:flex;gap:15px;will-change:transform}
+.slide{min-width:200px}
+.slide img{width:100%;border-radius:15px;box-shadow:0 10px 20px rgba(0,0,0,.1)}
+
+.card{display:flex;gap:40px;align-items:center;justify-content:center;margin-top:20px;padding:30px;border-radius:20px;background:white;box-shadow:0 20px 40px rgba(0,0,0,0.1)}
+.left img{width:220px;border-radius:15px}
+.right h2{font-family:'Playfair Display',serif;color:var(--text)}
+
+.buttons{position:relative;height:120px}
+button{padding:14px 26px;border:none;border-radius:30px;cursor:pointer;margin:10px;font-size:16px;transition:.25s}
+
+.yes{background:linear-gradient(135deg,var(--pink),var(--pink2));color:#fff;box-shadow:0 10px 20px rgba(255,77,109,.4)}
+.yes:hover{transform:scale(1.1)}
+
+.no{position:absolute;background:#fff;border:1px solid #ddd;box-shadow:0 6px 14px rgba(0,0,0,.1)}
+
+.extra-btn{display:none;position:absolute;top:70px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--pink),var(--pink2));color:#fff}
+
+#final{display:none;margin-top:60px}
+#finalImage{width:260px;border-radius:20px;margin-top:20px;opacity:0;transform:translateY(40px);transition:.5s}
+#finalImage.show{opacity:1;transform:translateY(0)}
+
+.heart{position:fixed;animation:float 5s linear infinite}
+@keyframes float{from{transform:translateY(100vh)}to{transform:translateY(-10vh)}}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h1>Some stories don't need words — they just need two hearts</h1>
+
+<div class="carousel">
+  <div class="track" id="track">
+    <div class="slide"><img src="https://i.ibb.co/Kjs4YcdH/IMG-0439.jpg"></div>
+    <div class="slide"><img src="https://i.ibb.co/MxrvHnjk/IMG-0690.jpg"></div>
+    <div class="slide"><img src="https://i.ibb.co/vCtTP1ky/IMG-6713.jpg"></div>
+    <div class="slide"><img src="https://i.ibb.co/n8PNn6VT/IMG-6973.jpg"></div>
+    <div class="slide"><img src="https://i.ibb.co/QjrCcnsW/IMG-7605.jpg"></div>
+  </div>
+</div>
+
+<div class="card" id="card">
+  <div class="left">
+    <img id="mainImage">
+    <p id="caption"></p>
+  </div>
+  <div class="right">
+    <h2 id="question"></h2>
+    <div class="buttons" id="btnWrap">
+      <button class="yes" id="yesBtn">Yes ❤️</button>
+      <button class="no" id="noBtn">No</button>
+      <button class="extra-btn" id="extraBtn">Too slow, bubs! 💨</button>
+    </div>
+  </div>
+</div>
+
+<div id="final">
+  <h1>I Knew You'd Say Yes!</h1>
+  <p>You just made this the best day ever 💖</p>
+  <img id="finalImage">
+</div>
+</div>
+
+<script>
+const data=[
+{text:"Are you aware that you are illegally cute? 😊",img:"https://i.ibb.co/Kjs4YcdH/IMG-0439.jpg",caption:"Our first picture of love"},
+{text:"Do you admit that I am the luckiest person alive? 😉",img:"https://i.ibb.co/n8PNn6VT/IMG-6973.jpg",caption:"Hands holding gently over warm coffee"},
+{text:"If I steal one kiss right now, will you forgive me? 😏",img:"https://i.ibb.co/vCtTP1ky/IMG-6713.jpg",caption:"A couple walking together on a shared path"},
+{text:"Should we grow old together and annoy each other forever? 👴👵",img:"https://i.ibb.co/MxrvHnjk/IMG-0690.jpg",caption:"A cozy indoor scene with warm light"},
+{text:"Will you be Marry Me Navneet? 💍👰‍♀️❤️",img:"https://i.ibb.co/RkcbHZYp/IMG-9684.jpg",caption:"Magical romantic celebration with glowing hearts"}
+];
+
+const finalImageSrc="https://i.ibb.co/QFfWJff1/IMG-9823.jpg";
+
+let index=0;
+const noBtn=document.getElementById('noBtn');
+const extraBtn=document.getElementById('extraBtn');
+
+function updateContent(){
+  document.getElementById('question').innerText=data[index].text;
+  document.getElementById('mainImage').src=data[index].img;
+  document.getElementById('caption').innerText=data[index].caption;
+}
+
+function resetNo(){
+  noBtn.style.left='150px';
+  noBtn.style.top='10px';
+}
+
+function nextQuestion(){
+  index++;
+  if(index<data.length){
+    updateContent();
+    resetNo();
+    extraBtn.style.display='none';
+  } else {
+    document.getElementById('card').style.display='none';
+    document.getElementById('final').style.display='block';
+
+    const finalImg=document.getElementById('finalImage');
+    finalImg.src=finalImageSrc;
+    setTimeout(()=>finalImg.classList.add('show'),300);
+
+    startHearts();
+  }
+}
+
+document.getElementById('yesBtn').onclick=()=>{
+  burstHearts();
+  nextQuestion();
+};
+
+const wrap=document.getElementById('btnWrap');
+wrap.addEventListener('mousemove',(e)=>{
+  const rect=wrap.getBoundingClientRect();
+  const mouseX=e.clientX-rect.left;
+  const mouseY=e.clientY-rect.top;
+
+  let btnX=noBtn.offsetLeft;
+  let btnY=noBtn.offsetTop;
+
+  const dx=btnX-mouseX;
+  const dy=btnY-mouseY;
+  const dist=Math.sqrt(dx*dx+dy*dy);
+
+  if(dist<120){
+    const angle=Math.atan2(dy,dx);
+    const move=120;
+
+    btnX+=Math.cos(angle)*move;
+    btnY+=Math.sin(angle)*move;
+
+    btnX=Math.max(0,Math.min(rect.width-noBtn.offsetWidth,btnX));
+    btnY=Math.max(0,Math.min(rect.height-noBtn.offsetHeight,btnY));
+
+    noBtn.style.left=btnX+'px';
+    noBtn.style.top=btnY+'px';
+
+    extraBtn.style.display='block';
+  }
+});
+
+function burstHearts(){
+  for(let i=0;i<15;i++){
+    const h=document.createElement('div');
+    h.className='heart';
+    h.innerText='❤️';
+    h.style.left=(window.innerWidth/2 + (Math.random()*100-50))+'px';
+    h.style.top=(window.innerHeight/2)+'px';
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),2000);
+  }
+}
+
+function startHearts(){
+  setInterval(()=>{
+    const h=document.createElement('div');
+    h.className='heart';
+    h.innerText='❤️';
+    h.style.left=Math.random()*100+'vw';
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),5000);
+  },200);
+}
+
+updateContent();
+resetNo();
+
+// infinite carousel
+const track=document.getElementById('track');
+let pos=0;
+const slides=[...track.children];
+slides.forEach(s=>track.appendChild(s.cloneNode(true)));
+
+function loop(){
+  pos-=0.5;
+  if(Math.abs(pos)>=track.scrollWidth/2) pos=0;
+  track.style.transform=`translateX(${pos}px)`;
+  requestAnimationFrame(loop);
+}
+loop();
+</script>
+
+</body>
+</html>
